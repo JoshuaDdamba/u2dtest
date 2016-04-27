@@ -185,7 +185,7 @@ function addToList(media) {
   link.href = media.link;
 
   listContainer.appendChild(img);
-  listContainer.appendChild(link);
+  //listContainer.appendChild(link);
   listContainer.appendChild(document.createElement('br'));
 }
 
