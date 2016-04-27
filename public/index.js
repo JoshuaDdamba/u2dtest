@@ -10,6 +10,7 @@ var ajax = {};
 // CREATE A FORM
 var form = document.createElement('form');
 form.name = 'tagsearch';
+form.autocomplete ='off';
 form.addEventListener('submit', handleFormSubmission);
 form.style.margin = "20px 10px";
 
@@ -69,7 +70,7 @@ app.appendChild(listContainer);
 app.appendChild(featureList);
 app.appendChild(mapContainer);
 var map = L.map(mapContainer).setView([55.707,12.529], 15);
-
+console.log(L);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={access_token}', {
     id: 'ddamba.ofm04n7i',
     access_token: 'pk.eyJ1IjoiZGRhbWJhIiwiYSI6Ik9vX1VPdmcifQ.nEbSOXJ-DWVGhiEY771xvg',
@@ -81,20 +82,19 @@ function mapRegions(data) {
   console.log("list of features");
   var geojsonLayer = L.geoJson(data, {
     onEachFeature: function (feature, layer) {
-      console.log("layer", layer);
-      console.log("feature:", feature);
       var featureContainer = document.createElement('div');
 
       var label = document.createElement('label');
 
       var checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.checked = 'true';
+      checkbox.checked = false;
       checkbox.id = 'checkbox.'+feature.id;
       checkbox.name = feature.id;
 
+
       label.htmlFor = 'checkbox.'+feature.id;
-      label.innerHTML = feature.properties.navn;
+      label.innerHTML = "<span>" + feature.properties.navn + "</span><span>"+ feature.properties.status + "<span>";
 
 
       checkbox.onchange = function () {
@@ -104,7 +104,7 @@ function mapRegions(data) {
         } else {
           geojsonLayer.removeLayer(featureMap[featureName]);
         }
-        
+
       };
 
       featureContainer.appendChild(checkbox);
@@ -121,6 +121,12 @@ function mapRegions(data) {
     }
   })
 
+//  console.log("My MAP:", featureMap);
+  for(featureId in featureMap) {
+    console.log("FeatureID:", featureId);
+    geojsonLayer.removeLayer(featureMap[featureId]);
+
+  }
   geojsonLayer.addTo(map);
 }
 
@@ -137,7 +143,7 @@ function getRegions() {
   xhttp.open("GET", url, true);
   xhttp.send();
 }
-
+console.log("i should not appear twice");
 getRegions();
 
 // ABOVE THIS LINE, THE LOGIC:
@@ -187,7 +193,7 @@ function fetchGrams (tag, count, access_parameters) {
 
   var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&count=10&access_token=16384709.6ac06b4.49b97800d7fd4ac799a2c889f50f2587';
   jsonp(url, function(response) {
- 
+
     if(response.data.length) {
       content.innerHTML = "";
       for(var i in response.data) {
@@ -204,7 +210,7 @@ function fetchGrams (tag, count, access_parameters) {
 }
 
 function handleFormSubmission(e) {
-  
+
   var tag = this.tag.value;
   if (e.preventDefault) e.preventDefault();
   console.log("value:" , tag);
@@ -215,4 +221,3 @@ function handleFormSubmission(e) {
 
   return false;
 }
-
