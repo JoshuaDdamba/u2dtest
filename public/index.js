@@ -94,7 +94,7 @@ function mapRegions(data) {
 
 
       label.htmlFor = 'checkbox.'+feature.id;
-  label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + " - "+ feature.properties.status + "  -  " + feature.properties.tidsramme+ "</font>";
+  label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + "</font>";
 
 
       checkbox.onchange = function () {
