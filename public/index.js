@@ -54,7 +54,7 @@ listContainer.style.overflow = "auto";
 
 var featureList = document.createElement('div');
 featureList.style.position = "absolute";
-featureList.style.left     = "0";
+featureList.style.left     = "150px";
 featureList.style.top      = "40px";
 featureList.style.bottom   = "0";
 featureList.style.overflow = "auto";
@@ -94,7 +94,7 @@ function mapRegions(data) {
 
 
       label.htmlFor = 'checkbox.'+feature.id;
-      label.innerHTML =  feature.properties.navn + "    -   "+ feature.properties.status + "  -  " + feature.properties.year ;
+  label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + " - "+ feature.properties.status + "  -  " + feature.properties.tidsramme+ "</font>";
 
 
       checkbox.onchange = function () {
