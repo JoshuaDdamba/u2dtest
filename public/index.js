@@ -94,7 +94,7 @@ function mapRegions(data) {
 
 
       label.htmlFor = 'checkbox.'+feature.id;
-      label.innerHTML = "<span>" + feature.properties.navn + "</span><span>"+ feature.properties.status + "<span>";
+      label.innerHTML =  feature.properties.navn + "    -   "+ feature.properties.status + "  -  " + feature.properties.year ;
 
 
       checkbox.onchange = function () {
