@@ -56,6 +56,7 @@ var featureList = document.createElement('div');
 featureList.style.position = "absolute";
 featureList.style.left     = "150px";
 featureList.style.top      = "40px";
+featureList.style.class    = "sidebarBox"
 featureList.style.bottom   = "0";
 featureList.style.overflow = "auto";
 
@@ -69,13 +70,20 @@ mapContainer.style.bottom   = "0px";
 app.appendChild(listContainer);
 app.appendChild(featureList);
 app.appendChild(mapContainer);
+
 var map = L.map(mapContainer).setView([55.707,12.529], 15);
 console.log(L);
+//var layerGroup = L.layerGroup().addTo(map);
+
+
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={access_token}', {
     id: 'ddamba.ofm04n7i',
     access_token: 'pk.eyJ1IjoiZGRhbWJhIiwiYSI6Ik9vX1VPdmcifQ.nEbSOXJ-DWVGhiEY771xvg',
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+
+//L.mapbox.tileLayer('map.id1').addTo(map);
+
 
 var featureMap = {};
 function mapRegions(data) {
@@ -91,10 +99,8 @@ function mapRegions(data) {
       checkbox.checked = false;
       checkbox.id = 'checkbox.'+feature.id;
       checkbox.name = feature.id;
-
-
       label.htmlFor = 'checkbox.'+feature.id;
-  label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + "</font>";
+    label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + " - "+ feature.properties.status + "  -  " + feature.properties.tidsramme+ "</font>";
 
 
       checkbox.onchange = function () {
@@ -121,9 +127,9 @@ function mapRegions(data) {
     }
   })
 
-//  console.log("My MAP:", featureMap);
+  //console.log("My MAP:", featureMap);
   for(featureId in featureMap) {
-    console.log("FeatureID:", featureId);
+  //  console.log("FeatureID:", featureId);
     geojsonLayer.removeLayer(featureMap[featureId]);
 
   }
@@ -143,7 +149,7 @@ function getRegions() {
   xhttp.open("GET", url, true);
   xhttp.send();
 }
-console.log("i should not appear twice");
+
 getRegions();
 
 // ABOVE THIS LINE, THE LOGIC:
