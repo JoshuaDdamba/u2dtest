@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Slide Mapper Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demo of SlideMapper functionality">
+    <meta name="author" content="cavis">
+
+    <!-- styles -->
+    <link href="externals/leaflet/leaflet.css" rel="stylesheet">
+    <link href="../slidemapper.css" rel="stylesheet">
+    <style type="text/css">
+      .smapp { border:1px solid #666; }
+      .center { width:800px; margin:0 auto; }
+      #options { margin-bottom: 30px; }
+      #options h1 { margin-bottom: 0; }
+      #options p { margin-top: .5em; }
+      #options label { display: inline-block; width: 130px; clear: both; }
+      #options .column { display: inline-block; width: 390px; vertical-align: top; }
+      #options .span1 { width: 80px; }
+      #options .span2 { width: 170px; }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- options pickers -->
+    <div id="options" class="center">
+      <h1>Slide Mapper Plugin Demo</h1>
+      <p>Source code and documentation available on <a href="https://github.com/cavis/slidemapper">Github</a></p>
+      <hr/>
+
+      <div class="column">
+        <label>Map Type:</label>
+        <select id="mapType">
+          <option value="cloudmade">Cloudmade (NEEDS API KEY)</option>
+          <option value="stamen-toner">Stamen Toner</option>
+          <option value="stamen-terrain">Stamen Terrain</option>
+          <option value="stamen-watercolor">Stamen Watercolor</option>
+          <option value="mapquest">Mapquest</option>
+          <option value="mapquest-aerial">Mapquest Aerial</option>
+        </select>
+        <br/>
+        <label>API Key:</label>
+        <input type="text" placeholder="req'd for cloudmade" id="apiKey" class="span2" />
+        <br/>
+        <label>Center:</label>
+        <input type="text" id="center1" class="span1" />
+        <input type="text" id="center2" class="span1" />
+        <br/>
+        <label>Zoom:</label>
+        <input type="number" id="zoom" class="span1" />
+        <br/>
+        <label>Min Zoom:</label>
+        <input type="number" id="minZoom" class="span1" />
+        <br/>
+        <label>Max Zoom:</label>
+        <input type="number" id="maxZoom" class="span1" />
+        <br/>
+        <label>Keyboard Events:</label>
+        <input type="checkbox" id="keyEvents" />
+        <br/>
+        <label>Leafpile Clustering:</label>
+        <input type="checkbox" id="leafPile" />
+        <br/>
+      </div>
+
+      <div class="column">
+        <label>Close Popups:</label>
+        <input type="checkbox" id="closePopupOnClick" />
+        <br/>
+        <label>Map Position:</label>
+        <select id="mapPosition">
+          <option value="bottom">Bottom</option>
+          <option value="top">Top</option>
+        </select>
+        <br/>
+        <label>Map Height:</label>
+        <input type="number" id="mapHeight" class="span1" />
+        <br/>
+        <label>Slide Height:</label>
+        <input type="number" id="slideHeight" class="span1" />
+        <br/>
+        <label>Auto Slide Height:</label>
+        <input type="checkbox" id="autoHeight" />
+        <br/>
+        <label>Animation Speed:</label>
+        <input type="number" id="animateSpeed" class="span1" />
+        <br/>
+        <label>Control Type:</label>
+        <select id="controlType">
+          <option value="sides">Sides</option>
+          <option value="top">Top</option>
+        </select>
+        <br/>
+      </div>
+
+
+      <br/><br/>
+      <button id="generate">Generate!</button>
+      ---
+      <button id="addrand">Add</button>
+      <button id="insertrand">Insert</button>
+      <button id="removecurr">Remove</button>
+      <button id="removeall">Remove All</button>
+      <button id="shuffle">Random shuffle</button>
+      <hr>
+    </div>
+
+    <!-- mapper container -->
+    <div id="mapper" class="center"></div>
+
+    <!-- javascripts -->
+    <script src="externals/jquery/jquery-1.7.2.min.js"></script>
+    <script src="externals/leaflet/leaflet.js"></script>
+    <script src="externals/leafpile/leafpile-src.js"></script>
+    <script src="http://maps.stamen.com/js/tile.stamen.js"></script>
+    <script src="../slidemapper.js"></script>
+
+    <!-- sample data -->
+    <script src="data.js"></script>
+
+    <!-- initialize slide mapper -->
+    <script type="text/javascript">
+        $mapper = $('#mapper').slideMapper({controlType: 'top', leafPile: true});
+
+        // helper to generate random data
+        function randomData() {
+          return {
+            marker: [(Math.random() * (45-30) + 30), -(Math.random() * (115-80) + 80)],
+            html: '<div style="margin:60px;text-align:center"><h1>Random Slide '+randSlideIdx+'</h1></div>',
+            popup: 'Random Slide '+(randSlideIdx++)
+          };
+        }
+
+        // generate random integers
+        function randomInt(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // helper to add sample data
+        // TODO: fix options setter to preserve slides
+        function testData() {
+          $mapper.slideMapper('add', EXAMPLEDATA);
+        }
+        testData();
+
+        // set options inputs
+        var opts = $mapper.slideMapper('options');
+        for (var i in opts) {
+          if (i == 'center') {
+            document.getElementById('center1').value = opts[i].lat;
+            document.getElementById('center2').value = opts[i].lng;
+          }
+          else if (l = document.getElementById(i)) {
+            var key = (opts[i] === true || opts[i] === false) ? 'checked' : 'value';
+            l[key] = opts[i];
+          }
+        }
+
+        // generate with new options
+        document.getElementById('generate').onclick = function() {
+          for (var i in opts) {
+            if (i == 'center') {
+              opts[i] = [document.getElementById('center1').value, document.getElementById('center2').value];
+            }
+            else if (l = document.getElementById(i)) {
+              var key = (opts[i] === true || opts[i] === false) ? 'checked' : 'value';
+              opts[i] = l[key];
+            }
+          }
+          $mapper.slideMapper('options', opts);
+          testData();
+        }
+
+        // slide action handlers
+        var randSlideIdx = 1;
+        document.getElementById('addrand').onclick = function() {
+          $mapper.slideMapper('add', randomData());
+        }
+        document.getElementById('insertrand').onclick = function() {
+          var curr = $mapper.slideMapper('get');
+          $mapper.slideMapper('insert', curr.index, randomData());
+        }
+        document.getElementById('removecurr').onclick = function() {
+          var curr = $mapper.slideMapper('get');
+          $mapper.slideMapper('remove', curr.index);
+        }
+        document.getElementById('removeall').onclick = function() {
+          $mapper.slideMapper('removeAll');
+        }
+        document.getElementById('shuffle').onclick = function() {
+          var count = $mapper.slideMapper('count');
+          var from = $mapper.slideMapper('get').index;
+          var to = randomInt(0, count-1);
+          console.log('shuffle from ', from, ' to ', to);
+          $mapper.slideMapper('shuffle', to);
+        }
+    </script>
+
+  </body>
+</html>
+
+
+

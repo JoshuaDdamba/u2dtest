@@ -2,8 +2,10 @@ var access_token = "16384709.6ac06b4.49b97800d7fd4ac799a2c889f50f2587",
     access_parameters = {
         access_token: access_token
     };
-
+var markers = [];
 var appSelector = 'mycph';
+var appSelehashd = 'hashdetails';
+var apphash = document.getElementById(appSelehashd);
 var app = document.getElementById(appSelector);
 var ajax = {};
 
@@ -17,7 +19,7 @@ form.style.margin = "20px 10px";
 var left = document.createElement('div');
 left.style.position = "absolute";
 left.style.width = "400px";
-left.style.top = "0";
+left.style.top = "40";
 left.style.bottom = "0";
 
 var content = document.createElement('div');
@@ -42,8 +44,8 @@ form.appendChild(submit);
 
 // ADD THE FORM AND THE CONTENT INTO THE APP ELEMENT
 left.appendChild(form);
-app.appendChild(left);
-app.appendChild(content);
+apphash.appendChild(left);
+apphash.appendChild(content);
 
 var listContainer = document.createElement('div');
 listContainer.style.position = "absolute";
@@ -54,11 +56,39 @@ listContainer.style.overflow = "auto";
 
 var featureList = document.createElement('div');
 featureList.style.position = "absolute";
-featureList.style.left     = "150px";
-featureList.style.top      = "40px";
+featureList.style.left     = "0px";
+featureList.style.top      = "0px";
+featureList.style.visibility = "hidden";
 featureList.style.class    = "sidebarBox"
 featureList.style.bottom   = "0";
 featureList.style.overflow = "auto";
+
+
+/*var leftButton = document.createElement('div');
+leftButton.id = "left";
+leftButton.innerHTML ="lesft press";
+
+leftButton.addEventListener("click", function(){console.log;});
+
+
+
+var rightButton = document.createElement('div');
+rightButton.id = "right";
+rightButton.innerHTML ="right press";
+
+leftButton.addEventListener("click", function(){console.log;})
+*/
+
+
+//var ctrlGroup = document.createElement('div');
+//ctrlGroup.id = "ctrlGroup";
+
+
+//ctrlGroup.appendChild(leftButton);
+//ctrlGroup.appendChild(rightButton);
+
+
+
 
 var mapContainer = document.createElement('div');
 mapContainer.style.position = "absolute";
@@ -70,8 +100,9 @@ mapContainer.style.bottom   = "0px";
 app.appendChild(listContainer);
 app.appendChild(featureList);
 app.appendChild(mapContainer);
+//app.appendChild(ctrlGroup);
 
-var map = L.map(mapContainer).setView([55.707,12.529], 15);
+var map = L.map(mapContainer).setView([55.711,12.525], 15);
 console.log(L);
 //var layerGroup = L.layerGroup().addTo(map);
 
@@ -83,7 +114,6 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 
 //L.mapbox.tileLayer('map.id1').addTo(map);
-
 
 var featureMap = {};
 function mapRegions(data) {
@@ -100,7 +130,7 @@ function mapRegions(data) {
       checkbox.id = 'checkbox.'+feature.id;
       checkbox.name = feature.id;
       label.htmlFor = 'checkbox.'+feature.id;
-    label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + " - "+ feature.properties.status + "  -  " + feature.properties.tidsramme+ "</font>";
+    label.innerHTML =  '<font face="verdana" size="0.1" color="black" >'+ feature.properties.navn + "</font>";//" - "+ feature.properties.status + "  -  " + feature.properties.tidsramme+ "</font>";
 
 
       checkbox.onchange = function () {
@@ -151,8 +181,9 @@ function getRegions() {
 }
 
 getRegions();
-
 // ABOVE THIS LINE, THE LOGIC:
+
+
 
 // JSONP. See: http://stackoverflow.com/a/22780569/971008
 function jsonp(url, callback) {
@@ -168,18 +199,58 @@ function jsonp(url, callback) {
   document.body.appendChild(script);
 }
 
-function addToMap(media) {
+
+
+
+
+
+var markerClusterer = L.markerClusterGroup({spiderfyDistanceMultiplier: 1.4});
+
+var icon = L.icon({
+    iconUrl: media.images.thumbnail.url,
+    iconSize: [30, 30],
+    //iconAnchor: [10, 10],
+    //popupAnchor: [-10, -10]
+    });
+
+   var locations = [];
+   for (var i=0; i < 1000; i++) {
+        locations.push([Math.random()+55, Math.random()]);
+      }
+   for (var i=0; i < locations.length; i++){
+      var m = ([media.location.latitude, media.location.longitude], {icon:icon});//.addTo(map);//.bindPopup('<img width="300px" src="'+media.images.standard_resolution.url+'"/><br><a href="'+media.link+'">'+'Til instagram Profile'+'</a>');
+      /*var m2 = {
+      //  lat: 55.711,
+      //  lng:12.525,
+      //  getLatLng: function () {
+        //  return {lat:this.lat, lng:this.lng};
+
+        }
+      }*/
+      markers.push(m);
+    }
+    markerClusterer.addLayers(markers);
+
+
+    function addToMap(media) {
+    map.addLayer(markerClusterer);
+}
+
+/*function addToMap(media) {
 
   var icon = L.icon({
     iconUrl: media.images.thumbnail.url,
-    iconSize: [70, 70]
+    iconSize: [30, 30]
   });
 
   console.log(media.images);
 
   L.marker([media.location.latitude, media.location.longitude], {icon:icon}).addTo(map)
-    .bindPopup('<img width="300px" src="'+media.images.standard_resolution.url+'"/>')
-}
+    .bindPopup('<img width="300px" src="'+media.images.standard_resolution.url+'"/><br><a href="'+media.link+'">'+'Til instagram Profile'+'</a>')
+}*/
+
+
+// add images without coordinates to the list
 
 function addToList(media) {
 
@@ -196,8 +267,8 @@ function addToList(media) {
 }
 
 function fetchGrams (tag, count, access_parameters) {
-
-  var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&count=10&access_token=16384709.6ac06b4.49b97800d7fd4ac799a2c889f50f2587';
+var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&count=10000&access_token=16384709.6ac06b4.49b97800d7fd4ac799a2c889f50f2587';
+  //var url = 'https://api.instagram.com/v1/tags/spotNV/media/recent?callback=?&count=10&access_token=16384709.6ac06b4.49b97800d7fd4ac799a2c889f50f2587';
   jsonp(url, function(response) {
 
     if(response.data.length) {
