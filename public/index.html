@@ -1,84 +1,140 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
-      <!--link href="../slidemapper.min.css" rel="stylesheet"-->
-      <link rel="stylesheet" href="./dist/MarkerCluster.css" />
-      <link rel="stylesheet" href="./dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="./leaftletCluster/MarkerCluster.css">
+    <link rel="stylesheet" href="./leaftletCluster/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="./leaftletCluster/MarkerCluster.Default.ie.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
-      <script src="./dist/leaflet.markercluster.js"></script>
-    <script type="text/javascript" src="./index.js" defer ></script>
-    <!--script src="externals/jquery-1.7.2.min.js"></script-->
-    <!--script src="externals/to/leaflet.js"></script-->
-    <!--script src="../slidemapper.min.js"></script-->
-    <title>Norvest Instagram Campegin</title>
+    <script src="./leaftletCluster/leaflet.markercluster.js"></script>
+    <title>mycph</title>
   </head>
 
   <style>
+  @font-face {
+    font-family: 'KlavikaRegular';
+    src: url('/public/font/klavika-regular-webfont.eot');
+    src: local('KlavikaRegular'),
+        url('/font/klavika-regular-webfont.ttf') format('truetype');
+}
+header h1 {
+    font-family: 'Klavika';
+    text-align: center;
+    opacity:3.9;
+}
+
+section #misc #misc-left h3 {
+    font-family:'Klavika';
+    text-align:right;
+    text-shadow:10%;
+    opacity:3.9;
+}
+
+h6 {
+    font-family: 'Klavika';
+    text-align: center;
+}
+
+    #page {
+      position:absolute;
+      top:0;left:0;
+      right:0;bottom:0;
+    }
     header{
       position:absolute;
       top:0;
       left:0;
-      text-align: center;
-      background-color:#FFFF8F;
       right:0;
-      height:100px;
-    /*  background-image:url(bg.jpg);
-        background-repeat: no-repeat;
-        background-position: top center;*/
+      border-style: dotted solid;
+        border-color:#BBBBBE;
+        border-width: 2px;
+      align-items: center;
+      background-color: #FFFFFF;
+      height:90px;
     }
+
     section {
       position:absolute;
-      top:120px;
+      top:90px;
       left:0;
       right:0;
       bottom:20px;
       overflow:auto;
     }
-    #slideshow{
-
-      top:0px;
-      left:0px;
-      background-color:#FF4522;
-      height:0px;
-    }
-    #mycph{
-       position:absolute;
-      bottom:0px;
-      left:0;
-      right:0;
-      height:400px;
-      background-color:#ff8888;
-    }
-    #hashdetails{
-     position:absolute;
-     left:0;
-     width:28%;
-     height:30%;
-     background-color:#FFFFFF;
-     }
-     #slidedisplay{
-          position:absolute;
-      right:0;
-      left:400;
-      border-top:0.5px;
-      width:43%;
-      height:30%;
-      background-color:#FF44BB;
-      }
-     #otherdetails{
+    section #misc{
       position:absolute;
-      width:28%;
-      right:0;
-      height:30%;
-      background-color:#BB4452;
-      }
+      top:0;
+      left:0;
+      right:100%;
+      height:200px;
+    }
+    section #misc #misc-left {
+      position:absolute;
+      border-style: solid;
+      border-color:#BBBBBE;
+      border-width: 2px;
+      left:0%;
+      Right:10%;
+       top:0%;
+      width:0%;
+      height:0%;
+    }
+    section #misc #misc-left p{
+     font-family: 'KlavikaRegular';
+     border-width: 2px;
+     font-style: italic;
+      text-align:right;
+      text-shadow:10%;
+      opacity:3.9;
+    }
+    section #misc #misc-left h3 {
+     font-family: 'Klavika';
+     font-style: italic;
+      text-align:right;
+      text-shadow:10%;
+      opacity:3.9;
+    }
+    section #misc #misc-middle {
+      position:absolute;
+      border-style: solid;
+      border-color:#BBBBBE;
+      border-width: 1px;
+      left:10%;
+      right:10%;
+      top:50%;
+      width:50%;
+      height:100%;
+    }
+/* resize images*/
+section #misc #misc-middle img {
+    width: 350px;
+    height: 350px;
+}
+    section #misc #misc-right {
+      position:absolute;
+      border-style: dotted solid;
+      right:50%;
+      top:0;
+      width:25%;
+      height:100%;
+    }
+    section #main {
+      position:absolute;
+      top:100px;
+      left:28%;
+      right:3%;
+      border-style: solid;
+      border-width: 1px;
+      border-color:#BBBBBE;
+      bottom:10%;
+    }
     footer {
       position:absolute;
       bottom:0;
-      left:0; right:0;
-      height:20px;
+      background-color: #BBDEFA;
+      left:0;
+      right:0;
+      height:40px;
     }
-
     .banner {
       position:absolute;
       left:400px;
@@ -87,32 +143,38 @@
       bottom:0;
       background-image: url('./images/imgpsh_fullsize.jpg')
     }
-    body{
-      font-family:klavika;
-    }
-
     .logo {
       margin:10px
     }
+    #misc-middle figure {
+      margin:0;
+      position:absolute;
+    }
 
   </style>
+
   <body>
 
-    <header>
-       <h1>YNDLINGSSTEDER I NORVEST</h1>
-    </header>
+    <div id="page">
+      <header id="heading">
+        <h1>YNDLINGSSTEDER I NORVEST</h1>
+      </header>
 
-    <section>
-        <div id="mycph"></div>
-        <div id="slideshow">
-           <div id="hashdetails"><h3>#spotNV</h3></div>
-           <div id="slidedisplay">7</div>
-           <div id="otherdetails">5</div>
-         </div>
-    </section>
-    <footer>
-     <img class="logo" src="./images/logo.jpg" height="50" alt="logo" />
-    </footer>
+      <section>
+        <div id="misc">
+          <div id="misc-left"><p>Hashtag:</p><h3>#SpotNV</h3></div>
+          <div id="misc-middle"></div>
+          <div id="misc-right"> </div>
+        </div>
+        <div id="main">
+          <div id="main"></div>
+        </div>
+      </section>
 
+      <footer id="footer">
+        <h6> Instagram Map Campaign </h6>
+      </footer>
+    </div>
+    <script src="./index.js"></script>
   </body>
 </html>
